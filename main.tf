@@ -22,6 +22,14 @@ resource "aws_instance" "ubuntu" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
 
+  user_data = <<-EOF
+        #!/bin/bash
+      sudo yum update -y
+      sudo yum -y install httpd -y
+      sudo service httpd start
+      echo "Hello world from EC2 $(hostname -f)" > /var/www/html/index.html
+      EOF
+
   tags = {
     Name = var.instance_name
   }
